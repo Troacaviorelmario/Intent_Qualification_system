@@ -42,23 +42,35 @@ My architecture introduces new features that enhance search quality but also inc
 - Why use weighted softmin?: Softmin allows equilibrium between through penalising the final score for weak matches on class features.
 - Why keep numerical comparisons outside semantic scoring?: It acts as a direct filter for user specific queries.
 - Why use IVF, and what does approximation change? It limits the comparison space between the query and company embeddings, only comparing within the selected clusters.
-- How are missing fields handled?
+- How are missing fields handled?: Empty company feature groups receive a similarity score of zero and companies missing a required numerical value are excluded by the corresponding filter.
 
 ## Installation
-[Environment, dependencies, model downloads, and hardware requirements]
+Install the Python dependencies and a compatible PyTorch build. Download the LFM3-1.7B Q4 GGUF model and configure its path (also replace in my code) and the llama.cpp executable. Nemotron embeddings are loaded through Sentence Transformers.
 
 ## Usage
-[Configuration, llama-server startup, index construction, and query execution]
+Configure the dataset, model paths, encoder device, `tau` and `nprobe`, then run:
+
+```bash
+python Intent_Qualification_base.py
+```
+
+The script starts llama-server and builds or loads the cached embeddings and IVF index. Evaluation results, structured extractions and latencies are appended to `search_results.jsonl`.
 
 ## Evaluation
-- Twelve evaluation queries
-- Repeated runs
-- Separate extraction and search latency measurements
-- Saved structured outputs and ranked results
-- IVF comparison against exhaustive search, when available
+- Twelve evaluation queries executed sequentially across repeated runs.
+- Separate latency measurements for structured extraction and semantic search.
+- Structured outputs, hyperparameters and Top-10 results saved in JSONL format.
+- Mean, median and P95 latency reported for each processing stage.
+- IVF retrieval fidelity assessed against exhaustive search when that comparison is performed.
 
 ## Results
-[Measured latency, retrieval fidelity, and representative examples]
+
+Sequential execution latency, in seconds:
+
+| Stage | Mean | Median | P95 |
+|---|---:|---:|---:|
+| SLM extraction | 28.59 | 27.90 | 33.93 |
+| Semantic search | 1.66 | 1.64 | 2.83 |
 
 ## Limitations
 - Extraction variability
