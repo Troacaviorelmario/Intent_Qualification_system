@@ -17,23 +17,23 @@ The scope of this project is to retrieve companies that satisfy the user's inten
 
 ### Structured Query Extraction
 Local AI model (LFM 3 1.7B in Q4) served through llama.cpp processes the input query and provides structured output via Pydantic with separation of company requirements via its feature classes: 
-  -Industry- industry type
+  - Industry- industry type
 
-  -Geography- geographic location, town city
+  - Geography- geographic location, town city
   
-  -Business model- business model
+  - Business model- business model
   
-  -Products and services- core offerings
+  - Products and services- core offerings
   
-  -Target markets: target markets
+  - Target markets: target markets
   
-  -Listing status: is public
+  - Listing status: is public
   
-  -Numerical constraints: company founding year, revenue, employee count
+  - Numerical constraints: company founding year, revenue, employee count
   
-  -Additional context: company description
+  - Additional context: company description
   
-  -Website: url
+  - Website: url
   
 
 ### 2. Company Representation
