@@ -27,16 +27,15 @@ Local AI model (LFM 3 1.7B in Q4) served through llama.cpp processes the input q
   - Structured — founding year, employee count, annual revenue
   
 
-### 2. Company Database Representation
-The JSONL database is embedded using the Nemotron 3.5  1B ( in bf16) embedding model for each company class, resulting in a normalized embedding vector of size 8,512.
+### Company Database Representation
+The JSONL database is embedded using the Nemotron 3.5  1B ( in bf16) embedding model for each company class, resulting in a normalized embedding vector of size 8 x 512. 
+For scalability purposes and reduced semantic search latency, the vector embeddings were grouped with K means algorithm, for each feature class, with automatic selection of the adequate number of centroids through the maximum distance from the line given by the maximum and minimum values ( Elbow Method). After this each cluster is stored as an inverted list containing the indices of its assigned embedding vectors.
 
-### 3. Candidate Retrieval
-- K-Means clustering for each feature group
-- Inverted lists containing company indices
-- Selection of nearby clusters through `nprobe`
-- Union of candidates across requested groups
+### Candidate Retrieval, Ranking and Filtering
+The candidates were retrived by first checking the closest n clusters ( minimum L2 distance) and extracting the representations of each selected cluster, then the dot product between the query embedding and each company embbeding was done for each feature class, dropping missing data from the search ( set with 0 similarity). 
+This was followed by weighted softmin aggregation with predefined weights to reduce the risk of strong matches on some features masking weak matches on others. I selected the weigths as "identity" = 5%, "industry" = 15%, "description" = 10%, "core_offerings" = 25%, "business_model" = 15%, "target_markets" = 20%, "geography" = 5%, "structured" = 5%. 
+At the end, numerical filtering was applied for the founding year, revenue  and employee count  ( greater, under, equal).
 
-### 4. Ranking and Filtering
 - Cosine similarity between corresponding query and company feature groups
 - Weighted softmin aggregation
 - Explicit numerical filtering
