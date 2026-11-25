@@ -28,11 +28,7 @@ Local AI model (LFM 3 1.7B in Q4) served through llama.cpp processes the input q
   
 
 ### 2. Company Database Representation
-The JSONL database is embedded using the Nemotron 3.5  1B ( in bf16) embedding model for each company class, resulting in a embedding vector of size (
-- Nemotron embedding model
-- Eight feature groups
-- Normalized, 512-dimensional embeddings
-- Cached embeddings and index data
+The JSONL database is embedded using the Nemotron 3.5  1B ( in bf16) embedding model for each company class, resulting in a normalized embedding vector of size 8,512.
 
 ### 3. Candidate Retrieval
 - K-Means clustering for each feature group
