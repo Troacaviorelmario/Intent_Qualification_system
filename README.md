@@ -17,26 +17,18 @@ The scope of this project is to retrieve companies that satisfy the user's inten
 
 ### Structured Query Extraction
 Local AI model (LFM 3 1.7B in Q4) served through llama.cpp processes the input query and provides structured output via Pydantic with separation of company requirements via its feature classes: 
-  - Industry- industry type
-
-  - Geography- geographic location, town city
-  
-  - Business model- business model
-  
-  - Products and services- core offerings
-  
-  - Target markets: target markets
-  
-  - Listing status: is public
-  
-  - Numerical constraints: company founding year, revenue, employee count
-  
-  - Additional context: company description
-  
-  - Website: url
+  - Identity — listing status, website URL
+  - Industry — industry type
+  - Description — company description
+  - Core offerings — products and services
+  - Business model — business models
+  - Target markets — customer segments and industries served
+  - Geography — country or region, town or city
+  - Structured — founding year, employee count, annual revenue
   
 
-### 2. Company Representation
+### 2. Company Database Representation
+The JSONL database is embedded using the Nemotron 3.5  1B ( in bf16) embedding model for each company class, resulting in a embedding vector of size (
 - Nemotron embedding model
 - Eight feature groups
 - Normalized, 512-dimensional embeddings
