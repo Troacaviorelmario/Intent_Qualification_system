@@ -32,15 +32,16 @@ The JSONL database is embedded using the Nemotron 3.5  1B ( in bf16) embedding m
 For scalability purposes and reduced semantic search latency, the vector embeddings were grouped with K means algorithm, for each feature class, with automatic selection of the adequate number of centroids through the maximum distance from the line given by the maximum and minimum values ( Elbow Method). After this each cluster is stored as an inverted list containing the indices of its assigned embedding vectors.
 
 ### Candidate Retrieval, Ranking and Filtering
-The candidates were retrived by first checking the closest n clusters ( minimum L2 distance) and extracting the representations of each selected cluster, then the dot product between the query embedding and each company embbeding was done for each feature class, dropping missing data from the search ( set with 0 similarity). 
-This was followed by weighted softmin aggregation with predefined weights to reduce the risk of strong matches on some features masking weak matches on others. I selected the weigths as "identity" = 5%, "industry" = 15%, "description" = 10%, "core_offerings" = 25%, "business_model" = 15%, "target_markets" = 20%, "geography" = 5%, "structured" = 5%. 
-At the end, numerical filtering was applied for the founding year, revenue  and employee count  ( greater, under, equal), followed by the selection of the top 10 candidates.
+- The candidates were retrived by first checking the closest n clusters ( minimum L2 distance) and extracting the representations of each selected cluster, then the dot product between the query embedding and each company embbeding was done for each feature class, dropping missing data from the search ( set with 0 similarity). 
+- This was followed by weighted softmin aggregation with predefined weights to reduce the risk of strong matches on some features masking weak matches on others. I selected the weigths as "identity" = 5%, "industry" = 15%, "description" = 10%, "core_offerings" = 25%, "business_model" = 15%, "target_markets" = 20%, "geography" = 5%, "structured" = 5%. 
+- At the end, numerical filtering was applied for the founding year, revenue  and employee count  ( greater, under, equal), followed by the selection of the top 10 candidates.
 
 ## Implementation Decisions
-- Why compare corresponding feature groups?
-- Why use weighted softmin?
-- Why keep numerical comparisons outside semantic scoring?
-- Why use IVF, and what does approximation change?
+My architecture introduces new features that enhance search quality but also increases computational overhead, so I must answer the following questions:
+- Why compare corresponding feature groups?: They allow the semantic search to concentrate on the most relevant business details such as core offerings, target markets, etc.
+- Why use weighted softmin?: Softmin allows equilibrium between through penalising the final score for weak matches on class features.
+- Why keep numerical comparisons outside semantic scoring?: It acts as a direct filter for user specific queries.
+- Why use IVF, and what does approximation change? It limits the comparison space between the query and company embeddings, only comparing within the selected clusters.
 - How are missing fields handled?
 
 ## Installation
