@@ -34,12 +34,7 @@ For scalability purposes and reduced semantic search latency, the vector embeddi
 ### Candidate Retrieval, Ranking and Filtering
 The candidates were retrived by first checking the closest n clusters ( minimum L2 distance) and extracting the representations of each selected cluster, then the dot product between the query embedding and each company embbeding was done for each feature class, dropping missing data from the search ( set with 0 similarity). 
 This was followed by weighted softmin aggregation with predefined weights to reduce the risk of strong matches on some features masking weak matches on others. I selected the weigths as "identity" = 5%, "industry" = 15%, "description" = 10%, "core_offerings" = 25%, "business_model" = 15%, "target_markets" = 20%, "geography" = 5%, "structured" = 5%. 
-At the end, numerical filtering was applied for the founding year, revenue  and employee count  ( greater, under, equal).
-
-- Cosine similarity between corresponding query and company feature groups
-- Weighted softmin aggregation
-- Explicit numerical filtering
-- Top-K ranked output
+At the end, numerical filtering was applied for the founding year, revenue  and employee count  ( greater, under, equal), followed by the selection of the top 10 candidates.
 
 ## Implementation Decisions
 - Why compare corresponding feature groups?
